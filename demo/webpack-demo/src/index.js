@@ -1,2 +1,2 @@
-import './css/style.css'
-document.getElementById("app").innerHTML = "hello demo"
+import './css/style.css';
+document.getElementById("app").innerHTML = "hello demo";

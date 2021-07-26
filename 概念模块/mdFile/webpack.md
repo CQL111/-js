@@ -23,4 +23,34 @@
 
 
 
+###  webpack 单独输入css文件；
+```
+    1. 因为使用了webpack5  所以一部分webpack的插件就不好使了；
+    例如：extract-text-webpack-plugin
+    他的使用方法也是：
+        npm install -D extract-text-webpack-plugin
+        webpack.config.js 文件中：
+        引入，插件中初始化，在loader中使用；
+
+    2. 使用mini-css-extract-plugin
+    使用方法：
+        npm i -D mini-css-extract-plugin 
+        webpack.config.js 文件中：
+        module>rule>css下的 use中这样写：
+         use: [
+          MiniCssExtractPlugin.loader,
+          // 'style-loader',
+          'css-loader'
+        ]
+        plugins
+            new MiniCssExtractPlugin({
+        filename: '../dist/css/style.css',  // 从 .js 文件中提取出来的 .css 文件的名称
+        }),
+```
+
+### webpack 压缩
+`压缩和优化一般放在optimization中； `
+1. HtmlMinimizerWebpackPlugin  html 压缩
+2. ImageMinimizerWebpackPlugin 图片压缩
+3. CssMinimizerWebpackPlugin css
 
