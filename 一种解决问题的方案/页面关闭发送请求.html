@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>页面关闭的时候记录</h1>
+    <p>在用户刷新或者关闭页面的时候发送请求</p>
+    <ul>
+        <li>使用src 系列发送请求</li>
+        <li>使用navigator.sendBeacon()</li>
+    </ul>
+    <div>语法：navigator.sendBeacon(url,data)</div>
+    <div>
+        url：去向服务器
+        data:发送的数据
+
+    </div>
+    <div>
+        页面离开事件：beforeunload
+    </div><hr>
+    <div>实现：window.addEventListener('beforeunload',()=>{
+        window.navigator.sendBeacon('','')
+    })</div>
+    <script>
+        window.addEventListener('beforeunload',()=>{
+            window.navigator.sendBeacon('','')
+        })
+    </script>
+</body>
+</html>
