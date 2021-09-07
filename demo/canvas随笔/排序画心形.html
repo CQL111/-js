@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <canvas id="canvas" width="1000" height="1000" style="background-color: #000;"></canvas>
+        <button id="maopao">点击maopao排序</button>
+        <button id="xuanze">点击选择排序</button>
+        <button id="charu">点击插入排序</button>
+        <button id="dui">点击堆排序</button>
+    </div>
+    <script>
+
+        // 生成随机数据 4个 总共720条数据；
+        function createNumberArr() {
+            let nums = []
+            for (let i = 0; i < 4; i++) {
+                const arr = [...Array(180).keys()];//0-100；
+                const res = []
+                while (arr.length) {
+                    const randomIndex = Math.random() * arr.length - 1
+                    res.push(arr.splice(randomIndex, 1)[0])//splice 返回数组
+                }
+                nums = [...nums, ...res]
+            }
+            return nums;
+        }
+
+
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d')
+        ctx.fillStyle = "white"
+        ctx.translate(500, 500)
+
+        const CosAndSin = []
+        for (let i = 0; i < 360; i++) {
+            const deg = i / -360 * Math.PI
+            CosAndSin.push({ cos: Math.cos(deg), sin: Math.sin(deg) })
+        }
+        const SinAndCos = []
+        for (let i = 0; i < 360; i++) {
+            const deg = i / 360 * Math.PI
+            SinAndCos.push({ cos1: Math.cos(deg), sin1: Math.sin(deg) })
+        }
+
+        function Rect(x, y, width, height) {
+            this.x = x
+            this.y = y
+            this.width = width
+            this.height = height;
+
+        }
+        Rect.prototype.draw = function () {
+            ctx.beginPath()
+            ctx.fillRect(this.x, this.y, this.width, this.height)
+            ctx.closePath()
+        }
+
+        function drawAll(arr) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    ctx.clearRect(-500, -500, 1000, 1000) // 清空画布
+                    const rects = []
+                    for (let i = 0; i < arr.length; i++) {
+                        const num = arr[i]
+                        const { cos, sin } = CosAndSin[Math.floor(i / 2)]
+                        const { cos1, sin1 } = SinAndCos[Math.floor(i / 2)]
+
+                        const y = -num * cos
+                        const x = -num * sin
+                        const y1 = -num * cos1
+                        const x1 = -num * sin1
+                        rects.push(new Rect(x, y, 1, 1))
+                        rects.push(new Rect(x1, y1, 1, 1))
+                    }
+                    rects.forEach(rect => rect.draw())
+                    resolve('draw success')
+                }, 10);
+            })
+        }
+        // 冒泡排序
+        async function bubbleSort(arr) {
+            var len = arr.length
+            for (var i = 0; i < len; i++) {
+                for (var j = 0; j < len - 1 - i; j++) {
+                    if (arr[j] > arr[j + 1]) {        //相邻元素两两对比
+                        var temp = arr[j + 1];        //元素交换
+                        arr[j + 1] = arr[j];
+                        arr[j] = temp;
+                    }
+                }
+                await drawAll(arr) // 一边排序一边重新画
+            }
+
+            return arr
+        }
+        // 选择排序
+        async function selectionSort(arr) {
+            var len = arr.length;
+            var minIndex, temp;
+            for (var i = 0; i < len - 1; i++) {
+                minIndex = i
+                for (var j = i + 1; j < len; j++) {
+                    if (arr[j] < arr[minIndex]) {
+                        minIndex = j;
+                    }
+                }
+                temp = arr[i]
+                arr[i] = arr[minIndex];
+                arr[minIndex] = temp;
+                await drawAll(arr)
+            }
+            return arr
+        }
+
+        // 插入排序
+        async function insertionSort(arr) {
+            if (Object.prototype.toString.call(arr).slice(8, -1) == "Array") {
+                for (var i = 1; i < arr.length; i++) {
+                    var key = arr[i];
+                    var j = i - 1
+                    while (j >= 0 && arr[j] > key) {
+                        arr[j + 1] = arr[j]
+                        j--
+                    }
+                    arr[j + 1] = key
+                    await drawAll(arr)
+                }
+                return arr
+            }
+        }
+        // 堆排序
+        async function heapSort(arr) {
+            var heapsize = arr.length;
+            var temp;
+            for (var i = Math.floor(heapsize / 2) - 1; i >= 0; i--) {
+                heapify(arr, i, heapsize);
+                await drawAll(arr)
+            }
+            for(var j=heapsize-1;j>=1;j--){
+                temp = arr[0];
+                arr[0] = arr[j]
+                arr[j] = temp;
+                heapify(arr,0,--heapsize);
+                await drawAll(arr)
+            }
+            return arr
+
+        }
+        function heapify(arr, x, len) {
+            if (Object.prototype.toString.call(arr).slice(8, -1) === 'Array' && typeof x === 'number') {
+                var l = 2 * x + 1, r = 2 * x + 2, largest = x, temp;
+                if (l < len && arr[l] > arr[largest]) {
+                    largest = l;
+                }
+                if (r < len && arr[r] > arr[largest]) {
+                    largest = r;
+                }
+                if (largest != x) {
+                    temp = arr[x];
+                    arr[x] = arr[largest];
+                    arr[largest] = temp;
+                    heapify(arr, largest, len);
+                }
+            } else {
+                return 'arr is not an Array or x is not a number!';
+            }
+        }
+
+
+
+        var btn = document.getElementById('maopao')
+        btn.addEventListener('click', function () {
+            ctx.clearRect(-500, -500, 1000, 1000)
+            var nums = createNumberArr()
+            bubbleSort(nums)
+        })
+        var btn1 = document.getElementById('xuanze')
+        btn1.addEventListener('click', function () {
+            ctx.clearRect(-500, -500, 1000, 1000)
+            var nums = createNumberArr()
+            selectionSort(nums)
+        })
+        var btn2 = document.getElementById('dui')
+        btn2.addEventListener('click', function () {
+            ctx.clearRect(-500, -500, 1000, 1000)
+            var nums = createNumberArr()
+            heapSort(nums)
+        })
+        var btn3 = document.getElementById('charu')
+        btn3.addEventListener('click', function () {
+            ctx.clearRect(-500, -500, 1000, 1000)
+            var nums = createNumberArr()
+            insertionSort(nums)
+        })
+
+
+    </script>
+</body>
+
+</html>
