@@ -59,6 +59,13 @@
     git checkout -b (branchname)创建新分支并立即切换到该分支
     git branch -d (branchname) 删除分支命令
     git merge newtest  把newtest合并到当前分支；
+    
+    Git cherry-pick 哈希值 ；将某一个commit的代码change 提交到当前分支；不会影响其他地方；
+
+    强行覆盖某个分支
+    Git checkout test2
+    Git reset --hard origin/release/le-1.x;
+    Git push -f;
 
 ```
 
@@ -77,5 +84,17 @@
 ### git 工具
 
 [小乌龟下载地址](https://tortoisegit.org/download/)
+
+[命令学习](https://juejin.cn/post/7024043015794589727)
+
+### npm  命令
+1. npm 包管理 10.2112.0.unstablelatest  
+    使用unstablelateset 会自动更新最新的小版本的包；
+2. npm update  包名
+
+    更新指定包
+
+3. 
+
 
 
